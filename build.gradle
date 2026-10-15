@@ -21,13 +21,10 @@ allprojects {
         mavenCentral()
         google()
         maven { url 'https://jitpack.io' }
-        // Aliyun keeps a permanent read-only mirror of the old JCenter cache.
-        // Two dependencies only ever shipped to Bintray/JCenter (their hosts are
-        // gone) and resolve EXACTLY here - everything else is found above:
-        //   com.github.nukc.stateview:kotlin:2.2.0  (StateView empty/loading UI)
-        //   com.imuxuan:floatingview:1.6           (magnet floating window)
-        // Listed last so canonical repos are always preferred.
-        maven { url 'https://maven.aliyun.com/repository/public' }
+        // NOTE: an Aliyun JCenter-mirror entry used to sit here for
+        // com.github.nukc.stateview and com.imuxuan. Both artifacts are now
+        // local sources under app/src/compat, so no dead-JCenter mirror is
+        // required and the build has no extra network dependency.
     }
 }
 
