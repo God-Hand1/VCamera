@@ -69,6 +69,12 @@ jobs:
       # requires JDK 11 for the Gradle build later on.
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          # The action's legacy default package 'tools' was removed from modern
+          # SDK repositories and makes this step fail with
+          # "Failed to find package 'tools'". We install the actual packages
+          # (platform-33 + build-tools) ourselves in the next step.
+          packages: platform-tools
 
       - name: Install Android platform and build tools
         shell: bash
