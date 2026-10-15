@@ -105,7 +105,13 @@ jobs:
           GRADLE_OPTS: '-Xmx4g -Dfile.encoding=UTF-8'
         run: |
           set -euo pipefail
-          gradle --no-daemon --stacktrace :app:assembleRelease
+          # The -P flags are deliberate redundancy: AGP hard-fails without
+          # android.useAndroidX, and passing them on the command line works
+          # even if gradle.properties was somehow lost in transit to the repo.
+          gradle --no-daemon --stacktrace \
+            -Pandroid.useAndroidX=true \
+            -Pandroid.enableJetifier=true \
+            :app:assembleRelease
 
       - name: Determine version and output name
         id: meta
