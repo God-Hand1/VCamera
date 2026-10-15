@@ -42,6 +42,13 @@ android {
             if (fileTree(dir: 'libs', include: ['camera-*.aar', 'camera.jar']).isEmpty()) {
                 java.srcDirs += 'src/standin/java'
             }
+            // Always-on compat sources (independent of the camera AAR gate):
+            //  * src/compat/java - StateView vendored from github.com/nukc/StateView
+            //    v2.2.0 (MIT) + a FloatingMagnetView stand-in, replacing the two
+            //    dead JCenter-only Maven artifacts.
+            //  * src/compat/res  - StateView's default state layouts/attrs/strings.
+            java.srcDirs += 'src/compat/java'
+            res.srcDirs += 'src/compat/res'
         }
     }
 
@@ -109,11 +116,14 @@ dependencies {
     implementation 'com.tbuonomo:dotsindicator:4.2'
     implementation 'com.afollestad.material-dialogs:core:3.3.0'
     implementation 'com.afollestad.material-dialogs:input:3.3.0'
-    implementation 'com.github.nukc.stateview:kotlin:2.2.0'
     implementation 'com.github.Ferfalk:SimpleSearchView:0.2.0'
     implementation 'com.github.Othershe:CornerLabelView:1.0.0'
     implementation 'org.osmdroid:osmdroid-android:6.1.11'
-    implementation 'com.imuxuan:floatingview:1.6'
+    // REMOVED: com.github.nukc.stateview:kotlin:2.2.0 and
+    //          com.imuxuan:floatingview:1.6
+    // Both were published ONLY to the dead JCenter. Their sources now live in
+    // src/compat (see sourceSets above), so the build needs no extra mirror
+    // repository and cannot break when a mirror goes down.
 
     implementation project(':opensdk')
     // NOTE: 'virtual.camera.camera:camera:1.0.0' (CameraLib) was removed - its
