@@ -24,6 +24,10 @@ out/
 .gradle/*
 build/
 
+# The opensdk engine module is restored by the CI workflow (submodule or a
+# fresh clone of WaxMoon/opensdk) - keep the local checkout out of the repo.
+opensdk/
+
 # Local configuration file (sdk path, etc)
 local.properties
 
@@ -91,5 +95,7 @@ lint/tmp/
 *.DS_Store
 
 gradle
-gradle.properties
+# gradle.properties is intentionally TRACKED: it carries android.useAndroidX
+# and android.enableJetifier, without which every fresh checkout (CI too)
+# fails with "android.useAndroidX property is not enabled".
 local.properties
