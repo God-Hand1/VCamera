@@ -2,7 +2,7 @@
 buildscript {
     ext.kotlin_version = "1.5.21"
     repositories {
-        jcenter()
+        // jcenter() removed: the service is shut down and only adds latency/failures.
         mavenCentral()
         google()
         maven { url 'https://jitpack.io' }
@@ -15,11 +15,12 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
+        // jcenter() and the CameraLib raw-GitHub repo were removed: both are gone.
+        // The camera engine now comes from local stand-in sources, or from a
+        // camera-*.aar dropped into app/libs/.
         mavenCentral()
         google()
         maven { url 'https://jitpack.io' }
-        maven { url "https://raw.githubusercontent.com/andvipgroup/CameraLib/master" }
     }
 }
 
