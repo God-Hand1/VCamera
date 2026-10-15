@@ -81,7 +81,12 @@ jobs:
         run: |
           set -euo pipefail
           yes | sdkmanager --licenses > /dev/null || true
-          sdkmanager "platform-tools" "platforms;android-33" "build-tools;${BUILD_TOOLS_VERSION}"
+          # 30.0.2 is the build-tools version AGP 7.0.2 defaults to when the
+          # project does not pin one; install it explicitly so AGP never has to
+          # self-download mid-build. 34.0.0 is the workflow's own toolchain
+          # (zipalign -P 16 / apksigner used by the sign+verify steps).
+          sdkmanager "platform-tools" "platforms;android-33" \
+            "build-tools;30.0.2" "build-tools;${BUILD_TOOLS_VERSION}"
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
