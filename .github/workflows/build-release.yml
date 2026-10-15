@@ -63,6 +63,20 @@ jobs:
           test -f opensdk/build.gradle
           echo "opensdk engine ready @ $(git -C opensdk rev-parse --short HEAD)"
 
+      # IMPORTANT: the Android SDK must be provisioned BEFORE setup-java switches
+      # the runner to JDK 11. Recent sdkmanager builds require JDK 17 (they run
+      # under the runner's default JDK at this point), while AGP 7.0.2 itself
+      # requires JDK 11 for the Gradle build later on.
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android platform and build tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager "platform-tools" "platforms;android-33" "build-tools;${BUILD_TOOLS_VERSION}"
+
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
@@ -73,16 +87,6 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
-
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android platform and build tools
-        shell: bash
-        run: |
-          set -euo pipefail
-          yes | sdkmanager --licenses > /dev/null || true
-          sdkmanager "platform-tools" "platforms;android-33" "build-tools;${BUILD_TOOLS_VERSION}"
 
       - name: Build release APK
         shell: bash
